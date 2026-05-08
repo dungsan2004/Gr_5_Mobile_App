@@ -34,12 +34,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.TextStyle
 import com.example.dungsmobileapp.data.WordRepository
 import com.example.dungsmobileapp.model.Word
-
-// Định nghĩa các màn hình trong ứng dụng
-sealed class Screen {
-    data object Home : Screen()
-    data class WordDetail(val word: String) : Screen()
-}
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,23 +50,38 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color(0xFFF8FAFC)
                 ) {
-                    var currentScreen by remember { mutableStateOf<Screen>(Screen.Home) }
+                    // 1. Khởi tạo NavController
+                    val navController = rememberNavController()
 
-                    Crossfade(targetState = currentScreen, label = "ScreenNav") { screen ->
-                        when (screen) {
-                            is Screen.Home -> {
-                                HomeScreen(
-                                    onWordClick = { word ->
-                                        currentScreen = Screen.WordDetail(word)
-                                    }
-                                )
-                            }
-                            is Screen.WordDetail -> {
-                                WordDetailScreen(
-                                    wordTerm = screen.word,
-                                    onBack = { currentScreen = Screen.Home }
-                                )
-                            }
+                    // 2. Định nghĩa NavHost thay cho Crossfade
+                    NavHost(
+                        navController = navController,
+                        startDestination = "home"
+                    ) {
+                        // Route: Trang chủ
+                        composable("home") {
+                            HomeScreen(
+                                onWordClick = { word ->
+                                    // Chuyển hướng sang trang chi tiết, truyền tham số 'word'
+                                    navController.navigate("detail/$word")
+                                }
+                            )
+                        }
+
+                        // Route: Chi tiết từ vựng
+                        composable(
+                            route = "detail/{word}",
+                            arguments = listOf(navArgument("word") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            // Lấy tham số 'word'
+                            val wordTerm = backStackEntry.arguments?.getString("word") ?: ""
+
+                            WordDetailScreen(
+                                wordTerm = wordTerm,
+                                onBack = {
+                                    navController.popBackStack()
+                                }
+                            )
                         }
                     }
                 }
