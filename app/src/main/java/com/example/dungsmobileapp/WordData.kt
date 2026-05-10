@@ -5,7 +5,6 @@ import com.example.dungsmobileapp.model.RelatedWord
 import androidx.compose.ui.graphics.Color
 
 object WordRepository {
-    // Danh sách từ vựng của bạn
     val vocabularyList = listOf(
         Word(
             id = "armageddon",
@@ -25,7 +24,7 @@ object WordRepository {
                 RelatedWord("Cataclysm", "Biến động lớn, thảm họa (Địa chất/Xã hội)")
             )
         ),
-        // Bạn có thể dễ dàng thêm từ thứ 2, thứ 3 ở đây mà không làm rối file giao diện
+
         Word(
             id = "serendipity",
             term = "Serendipity",
@@ -158,7 +157,6 @@ object WordRepository {
         ),
     )
 
-    // Hàm giúp tìm từ theo text
     fun getWord(term: String): Word? {
         return vocabularyList.find { it.term == term }
     }

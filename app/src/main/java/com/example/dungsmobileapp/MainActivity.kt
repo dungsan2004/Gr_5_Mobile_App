@@ -50,30 +50,24 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color(0xFFF8FAFC)
                 ) {
-                    // 1. Khởi tạo NavController
                     val navController = rememberNavController()
 
-                    // 2. Định nghĩa NavHost thay cho Crossfade
                     NavHost(
                         navController = navController,
                         startDestination = "home"
                     ) {
-                        // Route: Trang chủ
                         composable("home") {
                             HomeScreen(
                                 onWordClick = { word ->
-                                    // Chuyển hướng sang trang chi tiết, truyền tham số 'word'
                                     navController.navigate("detail/$word")
                                 }
                             )
                         }
 
-                        // Route: Chi tiết từ vựng
                         composable(
                             route = "detail/{word}",
                             arguments = listOf(navArgument("word") { type = NavType.StringType })
                         ) { backStackEntry ->
-                            // Lấy tham số 'word'
                             val wordTerm = backStackEntry.arguments?.getString("word") ?: ""
 
                             WordDetailScreen(
@@ -90,7 +84,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// Helper function to get specific CEFR level description
 fun getCefrExplanation(level: String): String {
     return when (level.uppercase()) {
         "A1" -> "A1 (Beginner): Người học có thể hiểu và sử dụng các biểu đạt quen thuộc hàng ngày và các câu rất cơ bản."
@@ -107,10 +100,8 @@ fun getCefrExplanation(level: String): String {
 fun HomeScreen(onWordClick: (String) -> Unit) {
     var showCefrDialog by remember { mutableStateOf(false) }
 
-    // Dữ liệu từ Repository
     val wotd = remember { WordRepository.vocabularyList.random() }
 
-    // Dialog giải thích CEFR đặc biệt cho Word of the Day
     if (showCefrDialog) {
         AlertDialog(
             onDismissRequest = { showCefrDialog = false },
@@ -135,7 +126,6 @@ fun HomeScreen(onWordClick: (String) -> Unit) {
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // --- HEADER ---
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -152,7 +142,6 @@ fun HomeScreen(onWordClick: (String) -> Unit) {
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        // --- SEARCH BAR ---
         var searchQuery by remember { mutableStateOf("") }
         var isEnToVi by remember { mutableStateOf(true) }
 
@@ -210,7 +199,6 @@ fun HomeScreen(onWordClick: (String) -> Unit) {
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        // --- WORD OF THE DAY ---
         Text("Hôm nay học gì?", modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
 
         Card(
@@ -222,7 +210,7 @@ fun HomeScreen(onWordClick: (String) -> Unit) {
         ) {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth() // SỬA LỖI: Luôn lấp đầy chiều ngang thẻ
+                    .fillMaxWidth()
                     .background(Brush.linearGradient(colors = listOf(Color(0xFF1E3A8A), Color(0xFF3B82F6))))
                     .padding(20.dp)
             ) {
@@ -312,7 +300,6 @@ fun WordDetailScreen(
             .background(Color(0xFFF8FAFC))
             .safeDrawingPadding()
     ) {
-        // --- TOP BAR ---
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -328,7 +315,6 @@ fun WordDetailScreen(
             }
         }
 
-        // --- WORD HEADER ---
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -362,7 +348,7 @@ fun WordDetailScreen(
             }
             Spacer(Modifier.height(16.dp))
 
-            // Badge Level with Icon Inside
+
             Surface(
                 color = wordData.cefrColor,
                 shape = RoundedCornerShape(50),
@@ -391,7 +377,7 @@ fun WordDetailScreen(
 
         Spacer(Modifier.height(24.dp))
 
-        // --- TAB ROW ---
+
         TabRow(
             selectedTabIndex = selectedTabIndex,
             containerColor = Color.Transparent,
@@ -412,7 +398,6 @@ fun WordDetailScreen(
             }
         }
 
-        // --- TAB CONTENT ---
         Box(
             modifier = Modifier
                 .fillMaxSize()
