@@ -155,6 +155,80 @@ object WordRepository {
             relatedWords = listOf(RelatedWord("Flexibility", "Sự linh hoạt, có thể thay đổi dễ dàng nhưng không nhất thiết phải là sự thích nghi với môi trường mới")
             )
         ),
+        Word(
+            id = "resilience",
+            term = "Resilience",
+            pronunciation = "/rɪˈzɪliəns/",
+            shortDefinition = "Sự kiên cường, khả năng phục hồi nhanh chóng.",
+            cefrLevel = "C1",
+            cefrDescription = "Advanced",
+            cefrColor = Color(0xFFFF9800), // Màu cam báo hiệu cấp độ C1
+            englishDiff = "The capacity to withstand or to recover quickly from difficulties.",
+            vietnameseDiff = "Khả năng chống chịu khó khăn hoặc phục hồi nhanh chóng sau những biến cố (sự kiên cường, sức bật).",
+            exampleSentence = "The people of this city showed remarkable resilience after the earthquake.",
+            nuanceInfo = "Thường mang sắc thái rất tích cực, khen ngợi phẩm chất mạnh mẽ vươn lên từ nghịch cảnh.",
+            collocations = listOf("Build resilience", "Display resilience", "Emotional resilience"),
+            relatedWords = listOf(
+                RelatedWord("Toughness", "Sự cứng cỏi, chịu đựng tốt"),
+                RelatedWord("Flexibility", "Sự dẻo dai, linh hoạt")
+            )
+        ),
+
+        Word(
+            id = "ubiquitous",
+            term = "Ubiquitous",
+            pronunciation = "/juːˈbɪkwɪtəs/",
+            shortDefinition = "Có mặt ở khắp mọi nơi.",
+            cefrLevel = "C2",
+            cefrDescription = "Proficiency",
+            cefrColor = Color(0xFFFF4D4D), // Cấp độ C2 màu đỏ
+            englishDiff = "Present, appearing, or found everywhere.",
+            vietnameseDiff = "Thấy ở khắp mọi nơi, rất thịnh hành hoặc phổ biến.",
+            exampleSentence = "Smartphones have become ubiquitous in daily life.",
+            nuanceInfo = "Một từ mang tính học thuật cao (formal), thường xuất hiện trong các bài luận văn, IELTS, TOEFL.",
+            collocations = listOf("Ubiquitous presence", "Ubiquitous computing"),
+            relatedWords = listOf(
+                RelatedWord("Omnipresent", "Hiện diện ở mọi nơi (thường dùng cho thánh thần/quyền lực)"),
+                RelatedWord("Pervasive", "Lan tỏa khắp nơi (Đôi khi mang nghĩa tiêu cực)")
+            )
+        ),
+
+        Word(
+            id = "empathy",
+            term = "Empathy",
+            pronunciation = "/ˈempəθi/",
+            shortDefinition = "Sự thấu cảm, đồng cảm.",
+            cefrLevel = "B2",
+            cefrDescription = "Upper-Intermediate",
+            cefrColor = Color(0xFFFFC107), // Vàng cam cho cấp độ B2
+            englishDiff = "The ability to understand and share the feelings of another.",
+            vietnameseDiff = "Khả năng đặt mình vào vị trí của người khác để thấu hiểu và chia sẻ cảm xúc của họ.",
+            exampleSentence = "Nurses must have a lot of empathy for their patients.",
+            nuanceInfo = "Sâu sắc hơn 'Sympathy'. Sympathy là thương cảm, còn Empathy là hiểu thấu cảm xúc đối phương như cảm xúc của chính mình.",
+            collocations = listOf("Have empathy for", "Deep empathy", "Show empathy"),
+            relatedWords = listOf(
+                RelatedWord("Sympathy", "Sự thông cảm (Thiên về thương hại hơn)"),
+                RelatedWord("Compassion", "Lòng trắc ẩn (Muốn giúp đỡ sau khi thấu cảm)")
+            )
+        ),
+        Word(
+            id = "practice_makes_perfect",
+            term = "Practice makes perfect",
+            pronunciation = "/ˈpræktɪs meɪks ˈpɜːrfɪkt/",
+            shortDefinition = "[Thành ngữ] Có công mài sắt, có ngày nên kim",
+            cefrLevel = "A2",
+            cefrDescription = "Elementary",
+            cefrColor = Color(0xFF4CAF50),
+            englishDiff = "Regular exercise of an activity or skill is the way to become proficient in it.",
+            vietnameseDiff = "Thường xuyên luyện tập sẽ giúp bạn trở nên thành thạo trong một kỹ năng nào đó.",
+            exampleSentence = "Don't worry if you can't do it now, practice makes perfect!",
+            nuanceInfo = "Thành ngữ phổ biến, mang ý nghĩa khuyến khích sự kiên trì và nỗ lực trong việc học tập hoặc rèn luyện một kỹ năng nào đó.",
+            collocations = listOf(),
+            relatedWords = listOf(
+                RelatedWord("Repetition", "Sự lặp lại (Cần thiết cho việc luyện tập)")
+            ),
+            isIdiom = true
+        )
     )
 
     fun getWord(term: String): Word? {

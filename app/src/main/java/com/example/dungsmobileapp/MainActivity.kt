@@ -39,6 +39,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import android.speech.tts.TextToSpeech
+import androidx.compose.ui.platform.LocalContext
+import java.util.Locale
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -144,19 +148,31 @@ fun HomeScreen(onWordClick: (String) -> Unit) {
 
         var searchQuery by remember { mutableStateOf("") }
         var isEnToVi by remember { mutableStateOf(true) }
+        var searchFilter by remember { mutableStateOf("ALL") }
 
-        val searchResults = remember(searchQuery, isEnToVi) {
+        val searchResults = remember(searchQuery, isEnToVi, searchFilter) {
             if (searchQuery.isBlank()) emptyList()
-            else WordRepository.vocabularyList.filter {
-                if (isEnToVi) {
-                    it.term.contains(searchQuery, ignoreCase = true) ||
-                            it.shortDefinition.contains(searchQuery, ignoreCase = true)
+            else WordRepository.vocabularyList.filter { word ->
+                // Kiểm tra xem từ khóa có khớp không (EN->VI hoặc VI->EN)
+                val matchesSearch = if (isEnToVi) {
+                    word.term.contains(searchQuery, ignoreCase = true) ||
+                            word.shortDefinition.contains(searchQuery, ignoreCase = true)
                 } else {
-                    it.vietnameseDiff.contains(searchQuery, ignoreCase = true) ||
-                            it.shortDefinition.contains(searchQuery, ignoreCase = true)
+                    word.vietnameseDiff.contains(searchQuery, ignoreCase = true) ||
+                            word.shortDefinition.contains(searchQuery, ignoreCase = true)
                 }
+
+                // Kiểm tra xem bộ lọc có khớp không
+                val matchesFilter = when (searchFilter) {
+                    "IDIOM" -> word.isIdiom
+                    "WORD" -> !word.isIdiom // Không phải idiom
+                    else -> true // "ALL"
+                }
+
+                matchesSearch && matchesFilter
             }
         }
+
 
         ElevatedCard(elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp), shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth()) {
             Column {
@@ -196,6 +212,31 @@ fun HomeScreen(onWordClick: (String) -> Unit) {
                 }
             }
         }
+
+        // --- THÊM KHỐI BỘ LỌC NÀY ---
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            FilterChip(
+                selected = searchFilter == "ALL",
+                onClick = { searchFilter = "ALL" },
+                label = { Text("Tất cả") }
+            )
+            FilterChip(
+                selected = searchFilter == "WORD",
+                onClick = { searchFilter = "WORD" },
+                label = { Text("Từ vựng") }
+            )
+            FilterChip(
+                selected = searchFilter == "IDIOM",
+                onClick = { searchFilter = "IDIOM" },
+                label = { Text("Thành ngữ") }
+            )
+        }
+        // -----------------------
 
         Spacer(modifier = Modifier.height(30.dp))
 
@@ -261,7 +302,27 @@ fun WordDetailScreen(
 ) {
     BackHandler(onBack = onBack)
 
-    val wordData = remember(wordTerm) { WordRepository.getWord(wordTerm) }
+    val wordData = remember(wordTerm) { WordRepository.getWord(wordTerm)
+    }
+
+    // --- BẮT ĐẦU CHÈN CODE TỪ ĐÂY ---
+    val context = LocalContext.current
+    val tts = remember(context) {
+        var textToSpeech: TextToSpeech? = null
+        textToSpeech = TextToSpeech(context) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                textToSpeech?.language = Locale.US
+            }
+        }
+        textToSpeech
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            tts.stop()
+            tts.shutdown()
+        }
+    }
 
     if (wordData == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -321,6 +382,7 @@ fun WordDetailScreen(
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // 1. Tên từ vựng
             Text(
                 text = wordData.term,
                 style = MaterialTheme.typography.displaySmall.copy(
@@ -329,6 +391,8 @@ fun WordDetailScreen(
                 )
             )
             Spacer(Modifier.height(8.dp))
+
+            // 2. Phần phiên âm & Nút phát âm (Đã được tích hợp tts.speak)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = wordData.pronunciation,
@@ -343,33 +407,40 @@ fun WordDetailScreen(
                     tint = Color(0xFF3B82F6),
                     modifier = Modifier
                         .size(24.dp)
-                        .clickable { }
+                        .clickable {
+                            // Phát âm thanh của từ vựng
+                            tts.speak(wordData.term, TextToSpeech.QUEUE_FLUSH, null, null)
+                        }
                 )
             }
             Spacer(Modifier.height(16.dp))
 
-
+            // 3. Phần hiển thị Cấp độ khó (CEFR) - đã được trả lại đúng nguyên trạng
             Surface(
                 color = wordData.cefrColor,
                 shape = RoundedCornerShape(50),
                 modifier = Modifier.clickable { showLevelInfo = true }
             ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "${wordData.cefrLevel} ${wordData.cefrDescription}",
+                        text = "${wordData.cefrLevel} - ${wordData.cefrDescription}",
                         color = Color.White,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp
                     )
-                    Spacer(Modifier.width(8.dp))
+                    Spacer(Modifier.width(6.dp))
                     Icon(
                         Icons.Default.Info,
                         contentDescription = "Info",
                         tint = Color.White,
                         modifier = Modifier.size(16.dp)
+                            .clickable {
+                                // --- THÊM DÒNG NÀY ĐỂ PHÁT ÂM THANH ---
+                                tts.speak(wordData.term, TextToSpeech.QUEUE_FLUSH, null, null)
+                            }
                     )
                 }
             }

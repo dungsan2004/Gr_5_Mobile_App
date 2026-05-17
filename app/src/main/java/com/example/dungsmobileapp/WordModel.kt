@@ -18,7 +18,8 @@ data class Word(
     val nuanceInfo: String,
     val collocations: List<String>,
 
-    val relatedWords: List<RelatedWord>
+    val relatedWords: List<RelatedWord>,
+    val isIdiom: Boolean = false
 )
 
 data class RelatedWord(
