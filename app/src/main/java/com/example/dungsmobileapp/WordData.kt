@@ -228,7 +228,49 @@ object WordRepository {
                 RelatedWord("Repetition", "Sự lặp lại (Cần thiết cho việc luyện tập)")
             ),
             isIdiom = true
-        )
+        ),
+        Word(
+            id = "bite_the_hand_that_bites_you",
+            term = "Bite the hand that bites you",
+            pronunciation = "/baɪt ðə hænd ðæt baɪts juː/",
+            shortDefinition = "[Thành ngữ] Ăn cháo đá bát",
+            cefrLevel = "B2",
+            cefrDescription = "Upper-Intermediate",
+            cefrColor = Color(0xFFFFC107),
+            englishDiff = "To harm someone who has helped you or is helping you.",
+            vietnameseDiff = "Làm hại người đã giúp đỡ bạn hoặc đang giúp đỡ bạn (Ăn cháo đá bát).",
+            exampleSentence = "He bit the hand that bites him by criticizing his boss after receiving a promotion.",
+            nuanceInfo = "Thành ngữ mang sắc thái tiêu cực, thường dùng để chỉ hành động phản bội hoặc không biết ơn đối với người đã giúp đỡ mình.",
+            collocations = listOf(),
+            relatedWords = listOf(
+                RelatedWord("Ingratitude", "Sự vô ơn (Tính cách, thái độ)"),
+                RelatedWord("Betrayal", "Sự phản bội (Hành động cụ thể)"),
+                RelatedWord("Backstab", "Đâm sau lưng (Hành động phản bội một cách lén lút)"),
+                RelatedWord("Ungrateful", "Vô ơn (Tính cách, thái độ)"),
+                RelatedWord("Turn against", "Quay lưng lại (Hành động phản bội)"),
+                RelatedWord("Kick down the ladder", "Ăn cháo đá bát (Phiên bản khác)")
+            ),
+            isIdiom = true
+        ),
+        Word(
+            id = "you_reap_what_you_sow",
+            term = "You're reap what you sow",
+            pronunciation = "/jʊər riːp wɒt juː səʊ/",
+            shortDefinition = "[Thành ngữ] Gieo gió gặt bão",
+            cefrLevel = "B2",
+            cefrDescription = "Upper-Intermediate",
+            cefrColor = Color(0xFFFFC107),
+            englishDiff = "Your actions will have consequences, and you will be affected by the results of your actions.",
+            vietnameseDiff = "Hành động của bạn sẽ có hậu quả, và bạn sẽ phải chịu ảnh hưởng từ kết quả của những hành động đó (Gieo gió gặt bão).",
+            exampleSentence = "If you treat people badly, you'll reap what you sow.",
+            nuanceInfo = "Thành ngữ mang sắc thái cảnh báo, nhấn mạnh rằng hành động xấu sẽ dẫn đến hậu quả xấu, và hành động tốt sẽ dẫn đến hậu quả tốt.",
+            collocations = listOf(),
+            relatedWords = listOf(
+                RelatedWord("Karma", "Nghiệp báo (Khái niệm tương tự trong triết học và tôn giáo)"),
+                RelatedWord("Cause and effect", "Nguyên nhân và kết quả (Khái niệm tương tự trong triết học và khoa học)")
+            ),
+            isIdiom = true
+        ),
     )
 
     fun getWord(term: String): Word? {
