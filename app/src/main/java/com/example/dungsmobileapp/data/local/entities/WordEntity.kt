@@ -10,4 +10,5 @@ data class WordEntity(
     val term: String,
     val definition: String,
     val isBookmarked: Boolean = false
+
 )
